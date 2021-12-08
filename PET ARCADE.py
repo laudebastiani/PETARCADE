@@ -443,7 +443,7 @@ def dinossauro():
 
     pygame.display.set_caption('PET ARCADE')
 
-    fundo = pygame.image.load('dino/fundo.png')
+    fundo = pygame.image.load('dino/fundo2.png')
 
     banner = pygame.image.load('dino/banner.png')
     banner = pygame.transform.scale(banner, (600,120))
