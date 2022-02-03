@@ -65,7 +65,10 @@ def menu_principal():
     while True:
  
         tela.blit(fundo_menu,(0,0))
- 
+        borda_1 = pygame.draw.rect(tela, (0, 0 , 0), (0,0,2,600))
+        borda_2 = pygame.draw.rect(tela, (0, 0 , 0), (0,0,600,2))        
+        borda_3 = pygame.draw.rect(tela, (0, 0 , 0), (598,0,2,600))
+        borda_4 = pygame.draw.rect(tela, (0, 0 , 0), (0,598,600,2))
         
         mx, my = pygame.mouse.get_pos()
  
@@ -367,7 +370,7 @@ def snake():
         lista_cabeca.append(x_cobra)
         lista_cabeca.append(y_cobra)
         
-        
+
         lista_cobra.append(lista_cabeca)
 
         if (lista_cobra.count(lista_cabeca) > 1) or cobra.colliderect(borda1) or cobra.colliderect(borda2) or cobra.colliderect(borda3) or cobra.colliderect(borda4):
@@ -443,7 +446,7 @@ def dinossauro():
 
     pygame.display.set_caption('PET ARCADE')
 
-    fundo = pygame.image.load('dino/fundo2.png')
+    fundo = pygame.image.load('dino/fundo.png')
 
     banner = pygame.image.load('dino/banner.png')
     banner = pygame.transform.scale(banner, (600,120))
@@ -463,8 +466,9 @@ def dinossauro():
 
     escolha_obstaculo = choice([0, 1])
 
+    n=1
     pontos = 0
-
+  
     xfundo = 0
     velocidade_jogo = 10
     velocidade_tela = velocidade_jogo-5
@@ -489,7 +493,7 @@ def dinossauro():
             self.rect = self.image.get_rect()
             self.mask = pygame.mask.from_surface(self.image)
             self.pos_y_inicial = ALTURA - 64 - 96//2
-            self.rect.topleft = (100, self.pos_y_inicial) #368   416(centro y)
+            self.rect.topleft = (100, self.pos_y_inicial) 
             self.pulo = False
 
         def pular(self):
@@ -608,6 +612,7 @@ def dinossauro():
         tela.blit(banner,(0,0))
         xfundo-=velocidade_tela
         tela.blit(fundo,(xfundo,120))
+        
         tela.blit(fundo,(xfundo+14000,120))
         tela.blit(fundo,(xfundo+2*14000,120))
         tela.blit(fundo,(xfundo+3*14000,120))
@@ -618,6 +623,12 @@ def dinossauro():
         tela.blit(fundo,(xfundo+8*14000,120))
         tela.blit(fundo,(xfundo+9*14000,120))
         tela.blit(fundo,(xfundo+10*14000,120))
+        tela.blit(fundo,(xfundo+11*14000,120))
+        tela.blit(fundo,(xfundo+12*14000,120))
+        tela.blit(fundo,(xfundo+13*14000,120))
+        tela.blit(fundo,(xfundo+14*14000,120))
+        tela.blit(fundo,(xfundo+15*14000,120))
+        
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -657,6 +668,7 @@ def dinossauro():
             som_colisao.play()
             colidiu = True
 
+        
         if colidiu == True:
             if pontos % 100 == 0:
                 pontos += 1
@@ -667,6 +679,7 @@ def dinossauro():
             velocidade_jogo=0
             velocidade_tela=0
             i=0
+        
 
         else:
             pontos += 1
@@ -675,7 +688,7 @@ def dinossauro():
             todas_as_sprites.update()
             texto_pontos = exibe_mensagem(pontos, 25, (AZUL))
             texto_record = exibe_mensagem(record2,25,(VERMELHO))
-
+        
         if pontos % 100 == 0:
             if velocidade_jogo >= 28:
                 velocidade_jogo += 0
@@ -699,10 +712,10 @@ def space():
     clock = pygame.time.Clock()
     fps = 60
 
-    screen_width = 600
-    screen_height = 600
+    largura = 600
+    altura = 600
 
-    screen = pygame.display.set_mode((screen_width, screen_height))
+    tela = pygame.display.set_mode((largura, altura))
     pygame.display.set_caption('PET ARCADE')
 
     
@@ -721,13 +734,13 @@ def space():
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
 
-    rows = 4
-    cols = 5
-    alien_cooldown = 1000#bullet cooldown in milliseconds
+    linhas = 4
+    colunas = 5
+    alien_cooldown = 1000
     last_alien_shot = pygame.time.get_ticks()
     countdown = 3
     last_count = pygame.time.get_ticks()
-    game_over = 0#0 is no game over, 1 means player has won, -1 means player has lost
+    game_over = 0
 
     red = (255, 0, 0)
     green = (0, 255, 0)
@@ -740,13 +753,13 @@ def space():
     banner = pygame.transform.scale(banner, (600, 120))  
 
     def draw_bg():
-        screen.blit(bg, (0, 0))
-        screen.blit(banner, (0,0))
+        tela.blit(bg, (0, 0))
+        tela.blit(banner, (0,0))
 
 
     def draw_text(text, font, text_col, x, y):
         img = font.render(text, True, text_col)
-        screen.blit(img, (x, y))
+        tela.blit(img, (x, y))
 
 
     class Spaceship(pygame.sprite.Sprite):
@@ -762,21 +775,20 @@ def space():
 
 
         def update(self):
-            #set movement speed
+            
             speed = 8
-            #set a cooldown variable
-            cooldown = 500 #milliseconds
+            
+            cooldown = 500
             game_over = 0
 
             key = pygame.key.get_pressed()
             if key[pygame.K_LEFT] and self.rect.left > 0:
                 self.rect.x -= speed
-            if key[pygame.K_RIGHT] and self.rect.right < screen_width:
+            if key[pygame.K_RIGHT] and self.rect.right < largura:
                 self.rect.x += speed
 
-            #record current time
             time_now = pygame.time.get_ticks()
-            #shoot
+        
             if key[pygame.K_SPACE] and time_now - self.last_shot > cooldown:
                 laser_fx.play()
                 bullet = Bullets(self.rect.centerx, self.rect.top)
@@ -786,11 +798,9 @@ def space():
 
             self.mask = pygame.mask.from_surface(self.image)
 
-
-            #draw health bar
-            pygame.draw.rect(screen, red, (self.rect.x, (self.rect.bottom + 10), self.rect.width, 15))
+            pygame.draw.rect(tela, red, (self.rect.x, (self.rect.bottom + 10), self.rect.width, 15))
             if self.health_remaining > 0:
-                pygame.draw.rect(screen, green, (self.rect.x, (self.rect.bottom + 10), int(self.rect.width * (self.health_remaining / self.health_start)), 15))
+                pygame.draw.rect(tela, green, (self.rect.x, (self.rect.bottom + 10), int(self.rect.width * (self.health_remaining / self.health_start)), 15))
             elif self.health_remaining <= 0:
                 explosion = Explosion(self.rect.centerx, self.rect.centery, 3)
                 explosion_group.add(explosion)
@@ -849,12 +859,12 @@ def space():
 
         def update(self):
             self.rect.y += 2
-            if self.rect.top > screen_height:
+            if self.rect.top > altura:
                 self.kill()
             if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
                 self.kill()
                 explosion2_fx.play()
-                #reduce spaceship health
+
                 spaceship.health_remaining -= 1
                 explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
                 explosion_group.add(explosion)
@@ -873,7 +883,7 @@ def space():
                     img = pygame.transform.scale(img, (40, 40))
                 if size == 3:
                     img = pygame.transform.scale(img, (160, 160))
-                #add the image to the list
+
                 self.images.append(img)
             self.index = 0
             self.image = self.images[self.index]
@@ -884,7 +894,7 @@ def space():
 
         def update(self):
             explosion_speed = 3
-            #update explosion animation
+
             self.counter += 1
 
             if self.counter >= explosion_speed and self.index < len(self.images) - 1:
@@ -892,7 +902,6 @@ def space():
                 self.index += 1
                 self.image = self.images[self.index]
 
-            #if the animation is complete, delete explosion
             if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
                 self.kill()
 
@@ -906,17 +915,15 @@ def space():
 
 
     def create_aliens():
-        #generate aliens
-        for row in range(rows):
-            for item in range(cols):
-                alien = Aliens(100 + item * 100, 175 + row * 70)
+
+        for linha in range(linhas):
+            for item in range(colunas):
+                alien = Aliens(100 + item * 100, 175 + linha * 70)
                 alien_group.add(alien)
 
     create_aliens()
 
-
-    #create player
-    spaceship = Spaceship(int(screen_width / 2), screen_height - 50, 3)
+    spaceship = Spaceship(int(largura / 2), altura - 50, 3)
     spaceship_group.add(spaceship)
 
 
@@ -925,43 +932,42 @@ def space():
 
         clock.tick(fps)
 
-        #draw background
+      
         draw_bg()
     
         
         if countdown == 0:
-            #create random alien bullets
-            #record current time
+
             time_now = pygame.time.get_ticks()
-            #shoot
+
             if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0:
                 attacking_alien = random.choice(alien_group.sprites())
                 alien_bullet = Alien_Bullets(attacking_alien.rect.centerx, attacking_alien.rect.bottom)
                 alien_bullet_group.add(alien_bullet)
                 last_alien_shot = time_now
 
-            #check if all the aliens have been killed
+          
             if len(alien_group) == 0:
                 game_over = 1
 
             if game_over == 0:
-                #update spaceship
+
                 game_over = spaceship.update()
 
-                #update sprite groups
+            
                 bullet_group.update()
                 alien_group.update()
                 alien_bullet_group.update()
             else:
                 if game_over == -1:
-                    draw_text('GAME OVER!', font40, yellow, int(screen_width / 2 - 125), int(screen_height / 2 + 150))
-                    draw_text('Pressione R para reiniciar', font30, yellow, int(screen_width / 2 - 200), int(screen_height / 2 + 200))
+                    draw_text('GAME OVER!', font40, yellow, int(largura / 2 - 125), int(altura / 2 + 150))
+                    draw_text('Pressione R para reiniciar', font30, yellow, int(largura / 2 - 200), int(altura / 2 + 200))
                 if game_over == 1:
-                    draw_text('Voce passou em todas as materias!', font30, yellow, int(screen_width / 2 - 250), int(screen_height / 2 ))
-                    draw_text('Pressione R para reiniciar', font30, yellow, int(screen_width / 2 - 200), int(screen_height / 2 + 50))
+                    draw_text('Voce passou em todas as materias!', font30, yellow, int(largura / 2 - 250), int(altura / 2 ))
+                    draw_text('Pressione R para reiniciar', font30, yellow, int(largura / 2 - 200), int(altura / 2 + 50))
 
         if countdown > 0:
-            draw_text(str(countdown), font40, yellow, int(screen_width / 2 - 15), int(screen_height / 2 + 140))
+            draw_text(str(countdown), font40, yellow, int(largura / 2 - 15), int(altura / 2 + 140))
             count_timer = pygame.time.get_ticks()
             if count_timer - last_count > 1000:
                 countdown -= 1
@@ -991,23 +997,19 @@ def space():
         hs = f'{record3}'
         pontuação = font40.render(pts, True, yellow)
         highscore = font35.render(hs, True, green)
-        
-
-
-        #update explosion group 
+            
         explosion_group.update()
 
 
-        #draw sprite groups
-        spaceship_group.draw(screen)
-        bullet_group.draw(screen)
-        alien_group.draw(screen)
-        alien_bullet_group.draw(screen)
-        explosion_group.draw(screen)
+        spaceship_group.draw(tela)
+        bullet_group.draw(tela)
+        alien_group.draw(tela)
+        alien_bullet_group.draw(tela)
+        explosion_group.draw(tela)
 
-        screen.blit(pontuação, (500, 13))
-        screen.blit(highscore, (540, 72))
-        #event handlers
+        tela.blit(pontuação, (500, 13))
+        tela.blit(highscore, (540, 72))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -1023,10 +1025,10 @@ def bird():
     clock = pygame.time.Clock()
     fps = 60
 
-    screen_width = 600
-    screen_height = 600
+    largura = 600
+    altura = 600
 
-    screen = pygame.display.set_mode((screen_width, screen_height))
+    tela = pygame.display.set_mode((largura, altura))
     pygame.display.set_caption('PET ARCADE')
 
 
@@ -1043,7 +1045,7 @@ def bird():
     flying = False
     game_over = False
     pipe_gap = 150
-    pipe_frequency = 1500 #milliseconds
+    pipe_frequency = 1500 
     last_pipe = pygame.time.get_ticks() - pipe_frequency
     score = 0
     pass_pipe = False
@@ -1063,13 +1065,13 @@ def bird():
 
     def draw_text(text, font, text_col, x, y):
         img = font.render(text, True, text_col)
-        screen.blit(img, (x, y))
+        tela.blit(img, (x, y))
 
 
     def reset_game():
         pipe_group.empty()
         flappy.rect.x = 100
-        flappy.rect.y = int(screen_height / 2)
+        flappy.rect.y = int(altura / 2)
         score = 0
         return score
 
@@ -1093,7 +1095,7 @@ def bird():
         def update(self):
 
             if flying == True:
-                #gravity
+
                 self.vel += 0.5
                 if self.vel > 8:
                     self.vel = 8
@@ -1101,14 +1103,13 @@ def bird():
                     self.rect.y += int(self.vel)
 
             if game_over == False:
-                #jump
+
                 if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                     self.clicked = True
                     self.vel = -10
                 if pygame.mouse.get_pressed()[0] == 0:
                     self.clicked = False
 
-                #handle the animation
                 self.counter += 1
                 flap_cooldown = 5
 
@@ -1119,7 +1120,6 @@ def bird():
                         self.index = 0
                 self.image = self.images[self.index]
 
-                #rotate the bird
                 self.image = pygame.transform.rotate(self.images[self.index], self.vel * -2)
             else:
                 self.image = pygame.transform.rotate(self.images[self.index], -90)
@@ -1131,7 +1131,7 @@ def bird():
             pygame.sprite.Sprite.__init__(self)
             self.image = pygame.image.load('bird/pipe.png')
             self.rect = self.image.get_rect()
-            #position 1 is from the top, -1 is from the bottom
+
             if position == 1:
                 self.image = pygame.transform.flip(self.image, False, True)
                 self.rect.bottomleft = [x, y - int(pipe_gap / 2) + 80]
@@ -1154,47 +1154,42 @@ def bird():
 
             action = False
 
-            #get mouse position
             pos = pygame.mouse.get_pos()
 
-            #check if mouse is over the button
             if self.rect.collidepoint(pos):
                 if pygame.mouse.get_pressed()[0] == 1:
                     action = True
 
-            #draw button
-            screen.blit(self.image, (self.rect.x, self.rect.y))
+            tela.blit(self.image, (self.rect.x, self.rect.y))
 
             return action
 
     bird_group = pygame.sprite.Group()
     pipe_group = pygame.sprite.Group()
 
-    flappy = Bird(100, int((screen_height/2)+120))
+    flappy = Bird(100, int((altura/2)+120))
 
     bird_group.add(flappy)
 
-    #create restart button instance
-    button = Button(screen_width // 2 - 50, screen_height // 2 , button_img)
+    button = Button(largura // 2 - 50, altura // 2 , button_img)
 
     run = True
     while run:
 
         clock.tick(fps)
 
-        screen.blit(bg, (0,120))
+        tela.blit(bg, (0,120))
 
-        bird_group.draw(screen)
+        bird_group.draw(tela)
         bird_group.update()
-        pipe_group.draw(screen)
+        pipe_group.draw(tela)
 
-        screen.blit(banner, (0,0))
-        linha =  pygame.draw.rect(screen, (0, 0 , 0), (0,0,600,1))
-        linha2 =  pygame.draw.rect(screen, (0, 0 , 0), (0,120,600,1))
+        tela.blit(banner, (0,0))
+        linha =  pygame.draw.rect(tela, (0, 0 , 0), (0,0,600,1))
+        linha2 =  pygame.draw.rect(tela, (0, 0 , 0), (0,120,600,1))
 
-        screen.blit(ground_img, (ground_scroll, 768))
+        tela.blit(ground_img, (ground_scroll, 768))
 
-        #check the score
         if len(pipe_group) > 0:
             if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.left\
                 and bird_group.sprites()[0].rect.right < pipe_group.sprites()[0].rect.right\
@@ -1211,12 +1206,9 @@ def bird():
         draw_text(str(score), font, yellow, 435, 15)
         draw_text(str(record4), font, purple, 510, 71)
 
-
-        #look for collision
         if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
             game_over = True
 
-        #check if bird has hit the ground
         if flappy.rect.bottom >= 600:
             game_over = True
             flying = False
@@ -1224,26 +1216,21 @@ def bird():
 
         if game_over == False and flying == True:
 
-            #generate new pipes
             time_now = pygame.time.get_ticks()
             if time_now - last_pipe > pipe_frequency:
                 pipe_height = random.randint(-100, 100)
-                btm_pipe = Pipe(screen_width, int(screen_height / 2) + pipe_height, -1)
-                top_pipe = Pipe(screen_width, int(screen_height / 2) + pipe_height, 1)
+                btm_pipe = Pipe(largura, int(altura / 2) + pipe_height, -1)
+                top_pipe = Pipe(largura, int(altura / 2) + pipe_height, 1)
                 pipe_group.add(btm_pipe)
                 pipe_group.add(top_pipe)
                 last_pipe = time_now
 
-
-            #draw and scroll the ground
             ground_scroll -= scroll_speed
             if abs(ground_scroll) > 35:
                 ground_scroll = 0
 
             pipe_group.update()
 
-
-        #check for game over and reset
         if game_over == True:
             if button.draw() == True:
                 game_over = False
